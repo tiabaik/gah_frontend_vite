@@ -1,0 +1,61 @@
+import ProfilePicture from "../assets/profile.webp"
+import Card from 'react-bootstrap/Card';
+import ListGroup from 'react-bootstrap/ListGroup';
+import axios from "axios";
+import { useEffect, useState } from "react";
+
+function Profile() {
+  
+    const [nama, setNama] = useState('')
+    const [email, setEmail] = useState('')
+    const [noIdentitas, setNoIdentitas] = useState('')
+    const [noTelp, setNoTelp] = useState('')
+    const [alamat, setAlamat] = useState('')
+
+  const readData = () => {
+    
+    axios.get('/custumer',{
+      headers:{
+        Authorization:`Bearer ${localStorage.getItem('token')}`
+      }
+    })
+        .then(response => {
+          console.log(response)
+            setNama(response.data.data.nama)
+            setEmail(response.data.data.email)
+            setNoIdentitas(response.data.data.no_identitas)
+            setNoTelp(response.data.data.no_telp)
+            setAlamat(response.data.data.alamat)
+
+        })
+        .catch(error => {
+            console.log(error)
+        });
+  };
+
+  useEffect(()=>{
+    readData()
+  })
+
+  return (
+    <Card className="mx-auto mt-5" style={{ backgroundColor: '#b0e57c', padding: '20px', width: '30rem' }}>
+      <Card.Img variant="holder.js/171x180" src={ProfilePicture} />
+      <Card.Body className="mx-auto">
+        <Card.Title>Profile</Card.Title>
+      </Card.Body>
+      <ListGroup className="list-group-flush">
+        <ListGroup.Item>Nama : {nama}</ListGroup.Item>
+        <ListGroup.Item>Email : {email}</ListGroup.Item>
+        <ListGroup.Item>No Identitas : {noIdentitas}</ListGroup.Item>
+        <ListGroup.Item>No Telepon :{noTelp}</ListGroup.Item>
+        <ListGroup.Item>Alamat :{alamat}</ListGroup.Item>
+      </ListGroup>
+      <Card.Body>
+        <Card.Link href="/editProfile">Edit Profile</Card.Link>
+        <Card.Link href="/ubahPassword">Ubah Password</Card.Link>
+      </Card.Body>
+    </Card>
+  );
+}
+
+export default Profile; 
